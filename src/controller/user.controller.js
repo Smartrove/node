@@ -10,11 +10,57 @@ const createUserHandler = async (req, res) => {
     log.error(error.message);
   }
 };
+
+
 const loginUserHandler = async (req, res) => {
   try {
     res.json({
       status: "success",
-      data: "user logged in sucessfully",
+      data: "user logged in successfully",
+    });
+  } catch (error) {
+    log.error(error.message);
+  }
+};
+
+const updateUserHandler = async (req, res) => {
+  try {
+    res.json({
+      status: "success",
+      data: "user updated  successfully",
+    });
+  } catch (error) {
+    log.error(error.message);
+  }
+};
+
+const getAllUsersHandler = async (req, res) => {
+  try {
+    res.json({
+      status: "success",
+      data: "user gotten  successfully",
+    });
+  } catch (error) {
+    log.error(error.message);
+  }
+};
+
+const getSingleUserHandler = async (req, res) => {
+  try {
+    res.json({
+      status: "success",
+      data: "user gotten  successfully",
+    });
+  } catch (error) {
+    log.error(error.message);
+  }
+};
+
+const deleteUserHandler = async (req, res) => {
+  try {
+    res.json({
+      status: "success",
+      data: "user deleted successfully",
     });
   } catch (error) {
     log.error(error.message);
@@ -24,4 +70,8 @@ const loginUserHandler = async (req, res) => {
 module.exports = {
   createUserHandler,
   loginUserHandler,
+  updateUserHandler,
+  getAllUsersHandler,
+  getSingleUserHandler,
+  deleteUserHandler,
 };
