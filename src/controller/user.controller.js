@@ -1,13 +1,34 @@
 const log = require("../logger/index");
+const User = require("../../models/User");
 
 const createUserHandler = async (req, res) => {
+  const { email } = req.body;
   try {
+    const userExist = await User.findOne({ email }).maxTimeMS(10000);
+    if (userExist) {
+      return res.status(403).json({
+        status: "failed",
+        message: "user with this email already exists",
+      });
+    }
+
+    //hash user password
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(req.body.password, salt);
+
+    const user = await User.create({
+      ...req.body,
+      password: hashPassword, // assuming password is in req.body
+      role: "Guest",
+    });
+
     res.json({
-      status: "success",
-      data: "user created sucessfully",
+      status: 200,
+      message: "User created successfully",
     });
   } catch (error) {
     log.error(error.message);
+    res.status(409).send(error.message);
   }
 };
 
