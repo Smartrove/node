@@ -1,10 +1,11 @@
 const log = require("../logger/index");
 const User = require("../../models/User");
+const bcrypt = require('bcryptjs')
 
 const createUserHandler = async (req, res) => {
   const { email } = req.body;
   try {
-    const userExist = await User.findOne({ email }).maxTimeMS(10000);
+    const userExist = await User.findOne({ email });
     if (userExist) {
       return res.status(403).json({
         status: "failed",
@@ -25,6 +26,7 @@ const createUserHandler = async (req, res) => {
     res.json({
       status: 200,
       message: "User created successfully",
+      user,
     });
   } catch (error) {
     log.error(error.message);
