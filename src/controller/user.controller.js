@@ -1,6 +1,7 @@
 const log = require("../logger/index");
 const User = require("../../models/User");
 const bcrypt = require('bcryptjs')
+const generateToken = require('../../config/generateToken')
 
 const createUserHandler = async (req, res) => {
   const { email } = req.body;
@@ -37,9 +38,28 @@ const createUserHandler = async (req, res) => {
 
 const loginUserHandler = async (req, res) => {
   try {
+    const {email, password} = req.body;
+    //check if email already exists
+    const user = await User.findOne({email});
+    if (!user) {
+      return res.status(403).json({
+        status: "failed",
+        message: "user with this email does not exist",
+      });
+    }
+
+    const passwordMatched = await bcrypt.compareSync(password, user.password)
+    if(!passwordMatched) {
+      return res.status(403).json({
+        status: "failed",
+        message: "incorrect password",
+      });
+    }
+
     res.json({
       status: "success",
-      data: "user logged in successfully",
+      user,
+      token: generateToken(user._id),
     });
   } catch (error) {
     log.error(error.message);

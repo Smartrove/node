@@ -29,5 +29,6 @@ app.get("/user", (req, res) => {
 
 app.listen(process.env.PORT, process.env.HOST, () =>
 {log.info(`Server listening at http://${process.env.HOST}:${process.env.PORT}/api/v1`);
-connect();}
+connect();
+}
 );
