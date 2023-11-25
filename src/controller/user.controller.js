@@ -66,6 +66,44 @@ const loginUserHandler = async (req, res) => {
   }
 };
 
+const userFollowingHandler = async(req, res) => {
+  try{
+    //find the user following to be followed
+    const user = await User.findById(req?.params?.id)
+
+    //find the user to be following
+    const followingUser = await User.findById(req?.body)
+
+    //check if the user already exist
+    if(user && followingUser){
+      //check if the following user already followed the user
+      const userFollowingExist = user.following.find((follower)=>{
+        follower.toString() === followingUser?.id.toString()
+      })
+
+      if(userFollowingExist){
+        return res.status(403).json({
+          status: "unsuccessful",
+          message: "you already followed this user",
+        })
+      } else{
+        user.follower.push(followingUser?._id)
+        followingUser.following.push(user?._id)
+        await user.save()
+        await followingUser.save()
+
+        res.json({
+          status: '200',
+          message: 'user followed successfully',
+        })
+      }
+    }
+  }
+  catch(err){
+    log.info(err.message)
+  }
+}
+
 const updateUserHandler = async (req, res) => {
   try {
     res.json({
@@ -117,4 +155,5 @@ module.exports = {
   getAllUsersHandler,
   getSingleUserHandler,
   deleteUserHandler,
+  userFollowingHandler
 };

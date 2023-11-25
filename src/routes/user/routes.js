@@ -8,6 +8,7 @@ const {
   getAllUsersHandler,
   getSingleUserHandler,
   deleteUserHandler,
+  userFollowingHandler,
 } = require("../../controller/user.controller");
 
 const UserRouter = express.Router();
@@ -18,5 +19,6 @@ UserRouter.put("/update", updateUserHandler);
 UserRouter.get("/get-all-users", getAllUsersHandler);
 UserRouter.get("/user/:id", getSingleUserHandler);
 UserRouter.delete("/delete/:id", deleteUserHandler);
+UserRouter.post('/following/:id', userFollowingHandler)
 
 module.exports = UserRouter;
