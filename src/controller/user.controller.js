@@ -1,7 +1,7 @@
 const log = require("../logger/index");
 const User = require("../../models/User");
-const bcrypt = require('bcryptjs')
-const generateToken = require('../../config/generateToken')
+const bcrypt = require("bcryptjs");
+const generateToken = require("../../config/generateToken");
 
 const createUserHandler = async (req, res) => {
   const { email } = req.body;
@@ -35,12 +35,11 @@ const createUserHandler = async (req, res) => {
   }
 };
 
-
 const loginUserHandler = async (req, res) => {
   try {
-    const {email, password} = req.body;
+    const { email, password } = req.body;
     //check if email already exists
-    const user = await User.findOne({email});
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(403).json({
         status: "failed",
@@ -48,8 +47,8 @@ const loginUserHandler = async (req, res) => {
       });
     }
 
-    const passwordMatched = await bcrypt.compareSync(password, user.password)
-    if(!passwordMatched) {
+    const passwordMatched = await bcrypt.compareSync(password, user.password);
+    if (!passwordMatched) {
       return res.status(403).json({
         status: "failed",
         message: "incorrect password",
@@ -66,43 +65,42 @@ const loginUserHandler = async (req, res) => {
   }
 };
 
-const userFollowingHandler = async(req, res) => {
-  try{
+const userFollowingHandler = async (req, res) => {
+  try {
     //find the user following to be followed
-    const user = await User.findById(req?.params?.id)
+    const user = await User.findById(req?.params?.id);
 
     //find the user to be following
-    const followingUser = await User.findById(req?.body)
+    const followingUser = await User.findById(req?.body.id);
 
     //check if the user already exist
-    if(user && followingUser){
+    if (user && followingUser) {
       //check if the following user already followed the user
-      const userFollowingExist = user.following.find((follower)=>{
-        follower.toString() === followingUser?.id.toString()
-      })
+      const userFollowingExist = user.following.find((follower) => {
+        return follower.toString() === followingUser?.id.toString();
+      });
 
-      if(userFollowingExist){
+      if (userFollowingExist) {
         return res.status(403).json({
           status: "unsuccessful",
           message: "you already followed this user",
-        })
-      } else{
-        user.follower.push(followingUser?._id)
-        followingUser.following.push(user?._id)
-        await user.save()
-        await followingUser.save()
+        });
+      } else {
+        user.follower.push(followingUser?._id);
+        followingUser.following.push(user?._id);
+        await user.save();
+        await followingUser.save();
 
         res.json({
-          status: '200',
-          message: 'user followed successfully',
-        })
+          status: "200",
+          message: "user followed successfully",
+        });
       }
     }
+  } catch (err) {
+    log.info(err.message);
   }
-  catch(err){
-    log.info(err.message)
-  }
-}
+};
 
 const updateUserHandler = async (req, res) => {
   try {
@@ -117,9 +115,10 @@ const updateUserHandler = async (req, res) => {
 
 const getAllUsersHandler = async (req, res) => {
   try {
+    const user = await User.find();
     res.json({
       status: "success",
-      data: "user gotten  successfully",
+      user,
     });
   } catch (error) {
     log.error(error.message);
@@ -128,9 +127,10 @@ const getAllUsersHandler = async (req, res) => {
 
 const getSingleUserHandler = async (req, res) => {
   try {
+    const user = await User.findById(req?.params?.id);
     res.json({
       status: "success",
-      data: "user gotten  successfully",
+      user,
     });
   } catch (error) {
     log.error(error.message);
@@ -155,5 +155,5 @@ module.exports = {
   getAllUsersHandler,
   getSingleUserHandler,
   deleteUserHandler,
-  userFollowingHandler
+  userFollowingHandler,
 };

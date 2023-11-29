@@ -17,8 +17,8 @@ UserRouter.post("/create", createUserHandler);
 UserRouter.post("/login", loginUserHandler);
 UserRouter.put("/update", updateUserHandler);
 UserRouter.get("/get-all-users", getAllUsersHandler);
-UserRouter.get("/user/:id", getSingleUserHandler);
+UserRouter.get("/get/:id", getSingleUserHandler);
 UserRouter.delete("/delete/:id", deleteUserHandler);
-UserRouter.post('/following/:id', userFollowingHandler)
+UserRouter.post("/following/:id", userFollowingHandler);
 
 module.exports = UserRouter;
