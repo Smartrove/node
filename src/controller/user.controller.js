@@ -66,12 +66,15 @@ const loginUserHandler = async (req, res) => {
 };
 
 const userFollowingHandler = async (req, res) => {
+  const { id } = req.body;
   try {
     //find the user following to be followed
     const user = await User.findById(req?.params?.id);
+    console.log("user", user);
 
     //find the user to be following
-    const followingUser = await User.findById(req?.body.id);
+    const followingUser = await User.findById(id);
+    console.log("followingUser:", followingUser);
 
     //check if the user already exist
     if (user && followingUser) {
@@ -99,6 +102,7 @@ const userFollowingHandler = async (req, res) => {
     }
   } catch (err) {
     log.info(err.message);
+    console.error(err.message);
   }
 };
 
