@@ -70,11 +70,9 @@ const userFollowingHandler = async (req, res) => {
   try {
     //find the user following to be followed
     const user = await User.findById(req?.params?.id);
-    console.log("user", user);
 
     //find the user to be following
     const followingUser = await User.findById(id);
-    console.log("followingUser:", followingUser);
 
     //check if the user already exist
     if (user && followingUser) {
@@ -103,6 +101,55 @@ const userFollowingHandler = async (req, res) => {
   } catch (err) {
     log.info(err.message);
     console.error(err.message);
+  }
+};
+
+const userUnfollowingHandler = async (req, res) => {
+  const { id } = req.body;
+  try {
+    //check the user to be unfollowed
+    const userTobeUnfollowed = await User.findById(req.params.id);
+
+    //check for the unfollowing user
+    const unfollowingUser = await User.findById(id);
+
+    if (userTobeUnfollowed && unfollowingUser) {
+      const userFollowing = userTobeUnfollowed.follower.find(
+        (follower) => follower.toString() === unfollowingUser._id.toString()
+      );
+
+      if (!userFollowing) {
+        userTobeUnfollowed.follower.push(unfollowingUser._id);
+        unfollowingUser.following.push(userTobeUnfollowed._id);
+
+        await userTobeUnfollowed.save();
+        await unfollowingUser.save();
+
+        res.json({
+          status: "success",
+          message: "user followed successfully",
+        });
+      } else {
+        userTobeUnfollowed.follower.filter(
+          (follower) => follower.toString() !== unfollowingUser._id.toString()
+        );
+
+        unfollowingUser.following.filter(
+          (following) =>
+            following.toString() !== userTobeUnfollowed._id.toString()
+        );
+
+        await userTobeUnfollowed.save();
+        await unfollowingUser.save();
+
+        res.json({
+          status: "success",
+          message: " user unfollowed successfully",
+        });
+      }
+    }
+  } catch (err) {
+    log.info(err.message);
   }
 };
 
@@ -160,4 +207,5 @@ module.exports = {
   getSingleUserHandler,
   deleteUserHandler,
   userFollowingHandler,
+  userUnfollowingHandler,
 };

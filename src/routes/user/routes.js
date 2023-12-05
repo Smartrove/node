@@ -9,6 +9,7 @@ const {
   getSingleUserHandler,
   deleteUserHandler,
   userFollowingHandler,
+  userUnfollowingHandler,
 } = require("../../controller/user.controller");
 
 const UserRouter = express.Router();
@@ -20,5 +21,6 @@ UserRouter.get("/get-all-users", getAllUsersHandler);
 UserRouter.get("/get/:id", getSingleUserHandler);
 UserRouter.delete("/delete/:id", deleteUserHandler);
 UserRouter.post("/following/:id", userFollowingHandler);
+UserRouter.post("/unfollowing/:id", userUnfollowingHandler);
 
 module.exports = UserRouter;
