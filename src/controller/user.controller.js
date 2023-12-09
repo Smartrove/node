@@ -107,10 +107,10 @@ const userFollowingHandler = async (req, res) => {
 const userUnfollowingHandler = async (req, res) => {
   const { id } = req.body;
   try {
-    //check the user to be unfollowed
+    // Check the user to be unfollowed
     const userTobeUnfollowed = await User.findById(req.params.id);
 
-    //check for the unfollowing user
+    // Check for the unfollowing user
     const unfollowingUser = await User.findById(id);
 
     if (userTobeUnfollowed && unfollowingUser) {
@@ -130,11 +130,11 @@ const userUnfollowingHandler = async (req, res) => {
           message: "user followed successfully",
         });
       } else {
-        userTobeUnfollowed.follower.filter(
+        userTobeUnfollowed.follower = userTobeUnfollowed.follower.filter(
           (follower) => follower.toString() !== unfollowingUser._id.toString()
         );
 
-        unfollowingUser.following.filter(
+        unfollowingUser.following = unfollowingUser.following.filter(
           (following) =>
             following.toString() !== userTobeUnfollowed._id.toString()
         );
@@ -144,7 +144,7 @@ const userUnfollowingHandler = async (req, res) => {
 
         res.json({
           status: "success",
-          message: " user unfollowed successfully",
+          message: "user unfollowed successfully",
         });
       }
     }
