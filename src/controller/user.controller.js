@@ -154,11 +154,27 @@ const userUnfollowingHandler = async (req, res) => {
 };
 
 const updateUserHandler = async (req, res) => {
+  const { id, email } = req.body;
   try {
-    res.json({
-      status: "success",
-      data: "user updated  successfully",
-    });
+    //check if user already exists
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      res.send("user not found");
+    } else {
+      const newUser = req.body;
+      const updatedUser = await User.findByIdAndUpdate(
+        user._id,
+        { ...newUser },
+        { new: true }
+      );
+
+      res.json({
+        status: "success",
+        data: "user updated  successfully",
+        updatedUser,
+      });
+    }
   } catch (error) {
     log.error(error.message);
   }
