@@ -10,6 +10,7 @@ const {
   deleteUserHandler,
   userFollowingHandler,
   userUnfollowingHandler,
+  updatePasswordHandler,
 } = require("../../controller/user.controller");
 
 const UserRouter = express.Router();
@@ -22,5 +23,6 @@ UserRouter.get("/get/:id", getSingleUserHandler);
 UserRouter.delete("/delete/:id", deleteUserHandler);
 UserRouter.post("/following/:id", userFollowingHandler);
 UserRouter.post("/unfollowing/:id", userUnfollowingHandler);
+UserRouter.put("/update-password", updatePasswordHandler);
 
 module.exports = UserRouter;

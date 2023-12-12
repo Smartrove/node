@@ -204,6 +204,31 @@ const getSingleUserHandler = async (req, res) => {
   }
 };
 
+const updatePasswordHandler = async (req, res) => {
+  try {
+    const { password, id } = req.body;
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      const hashPassword = await bcrypt.hash(password, salt);
+
+      await User.findByIdAndUpdate(
+        id,
+        { password: hashPassword },
+        { new: true, runValidators: true }
+      );
+
+      res.json({
+        status: "success",
+        message: "user password updated successfully",
+      });
+    } else {
+      log.info("user password update failed");
+    }
+  } catch (error) {
+    log.info(error.message);
+  }
+};
+
 const deleteUserHandler = async (req, res) => {
   try {
     res.json({
@@ -224,4 +249,5 @@ module.exports = {
   deleteUserHandler,
   userFollowingHandler,
   userUnfollowingHandler,
+  updatePasswordHandler,
 };
