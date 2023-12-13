@@ -11,6 +11,7 @@ const {
   userFollowingHandler,
   userUnfollowingHandler,
   updatePasswordHandler,
+  blockAndUnblockUserHandler,
 } = require("../../controller/user.controller");
 
 const UserRouter = express.Router();
@@ -24,5 +25,6 @@ UserRouter.delete("/delete/:id", deleteUserHandler);
 UserRouter.post("/following/:id", userFollowingHandler);
 UserRouter.post("/unfollowing/:id", userUnfollowingHandler);
 UserRouter.put("/update-password", updatePasswordHandler);
+UserRouter.post("/block-unblock/:id", blockAndUnblockUserHandler);
 
 module.exports = UserRouter;

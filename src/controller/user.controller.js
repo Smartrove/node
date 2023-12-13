@@ -1,5 +1,8 @@
 const log = require("../logger/index");
 const User = require("../../models/User");
+const Post = require("../../models/Post");
+const Comment = require("../../models/Comment");
+const Category = require("../../models/Category");
 const bcrypt = require("bcryptjs");
 const generateToken = require("../../config/generateToken");
 
@@ -231,10 +234,62 @@ const updatePasswordHandler = async (req, res) => {
 
 const deleteUserHandler = async (req, res) => {
   try {
+    const { id } = req.params;
+
+    const user = await User.findById(id);
+    //find the user post
+    const posts = await Post.deleteMany({ user: id });
+
+    //find the user comments
+    const comments = await Comment.deleteMany({ user: id });
+
+    //find the user categories
+
+    const Categories = await Category.deleteMany({ user: id });
+
+    await user.deleteOne();
     res.json({
       status: "success",
-      data: "user deleted successfully",
+      message: "user account deleted successfully",
     });
+  } catch (error) {
+    log.error(error.message);
+  }
+};
+
+const blockAndUnblockUserHandler = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    //find the user to be blocked;
+    const userTobeBlocked = await User.findById(id);
+
+    //find the blocking user
+    const { userId } = req.body;
+    const blockingUser = await User.findById(userId);
+
+    if (userTobeBlocked && blockingUser) {
+      const userAlreadyBlocked = await blockingUser.blocked.find(
+        (blockedUser) =>
+          blockedUser.toString() === userTobeBlocked._id.toString()
+      );
+
+      if (userAlreadyBlocked) {
+        blockingUser.blocked.pop(userTobeBlocked._id.toString());
+        await blockingUser.save();
+        res.json({
+          status: "success",
+          message: "user unblocked successfully",
+        });
+      } else {
+        blockingUser.blocked.push(userTobeBlocked._id.toString());
+        await blockingUser.save();
+        res.json({
+          status: "success",
+          message: "user blocked successfully",
+        });
+      }
+    }
   } catch (error) {
     log.error(error.message);
   }
@@ -250,4 +305,5 @@ module.exports = {
   userFollowingHandler,
   userUnfollowingHandler,
   updatePasswordHandler,
+  blockAndUnblockUserHandler,
 };

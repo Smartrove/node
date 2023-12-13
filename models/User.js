@@ -30,10 +30,12 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    isBlocked: {
-      type: Boolean,
-      default: false,
-    },
+    blocked: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     isAdmin: {
       type: Boolean,
       default: false,
@@ -75,7 +77,6 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
 
 const User = mongoose.model("User", userSchema);
 
