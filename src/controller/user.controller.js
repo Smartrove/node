@@ -295,6 +295,25 @@ const blockAndUnblockUserHandler = async (req, res) => {
   }
 };
 
+const adminBlockedAndUnblockedUser = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const userTobeBlocked = await User.findById(id);
+    if (!userTobeBlocked) {
+      log.error("User not found");
+    } else {
+      userTobeBlocked.isBlocked = true;
+      userTobeBlocked.save();
+      res.json({
+        status: "success",
+        message: "user blocked successfully",
+      });
+    }
+  } catch (error) {
+    log.error(error.message);
+  }
+};
+
 module.exports = {
   createUserHandler,
   loginUserHandler,
@@ -306,4 +325,5 @@ module.exports = {
   userUnfollowingHandler,
   updatePasswordHandler,
   blockAndUnblockUserHandler,
+  adminBlockedAndUnblockedUser,
 };

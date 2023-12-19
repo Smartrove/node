@@ -12,6 +12,7 @@ const {
   userUnfollowingHandler,
   updatePasswordHandler,
   blockAndUnblockUserHandler,
+  adminBlockedAndUnblockedUser,
 } = require("../../controller/user.controller");
 
 const UserRouter = express.Router();
@@ -26,5 +27,6 @@ UserRouter.post("/following/:id", userFollowingHandler);
 UserRouter.post("/unfollowing/:id", userUnfollowingHandler);
 UserRouter.put("/update-password", updatePasswordHandler);
 UserRouter.post("/block-unblock/:id", blockAndUnblockUserHandler);
+UserRouter.post("/admin-block-unblock/:id", adminBlockedAndUnblockedUser);
 
 module.exports = UserRouter;
