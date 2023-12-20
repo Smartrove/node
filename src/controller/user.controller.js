@@ -295,7 +295,7 @@ const blockAndUnblockUserHandler = async (req, res) => {
   }
 };
 
-const adminBlockedAndUnblockedUser = async (req, res) => {
+const adminBlockedUser = async (req, res) => {
   const { id } = req.params;
   try {
     const userTobeBlocked = await User.findById(id);
@@ -313,6 +313,54 @@ const adminBlockedAndUnblockedUser = async (req, res) => {
     log.error(error.message);
   }
 };
+const adminUnblockedUser = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const userTobeUnBlocked = await User.findById(id);
+    if (!userTobeUnBlocked) {
+      log.error("User not found");
+    } else {
+      userTobeUnBlocked.isBlocked = false;
+      userTobeUnBlocked.save();
+      res.json({
+        status: "success",
+        message: "user unblocked successfully",
+      });
+    }
+  } catch (error) {
+    log.error(error.message);
+  }
+};
+
+const userViewingProfileHandler = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findById(id);
+
+    const { viewingUserId } = req.body;
+    const viewingUser = await User.findById(viewingUserId);
+
+    if (user.isBlocked === true) {
+      return res.send("user is blocked by admin");
+      ``;
+    }
+
+    if (!user && !viewingUser) {
+      res.send("users does not exist");
+    }
+
+    user.viewBy.push(viewingUser._id.toString());
+    user.save();
+
+    res.json({
+      status: "success",
+      message: "user viewed successfully",
+      user,
+    });
+  } catch (error) {
+    log.error(error.message);
+  }
+};
 
 module.exports = {
   createUserHandler,
@@ -325,5 +373,7 @@ module.exports = {
   userUnfollowingHandler,
   updatePasswordHandler,
   blockAndUnblockUserHandler,
-  adminBlockedAndUnblockedUser,
+  adminBlockedUser,
+  adminUnblockedUser,
+  userViewingProfileHandler,
 };
