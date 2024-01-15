@@ -6,10 +6,10 @@ const log = require("../logger/index");
 //logic to create a post
 
 const createPostHandler = async (req, res) => {
-  const { id } = req.body;
+  const { user } = req.body;
 
   try {
-    const author = await User.findById(id);
+    const author = await User.findById(user);
     if (author.isBlocked) {
       res.status(403).send("User is not authorized");
     }
@@ -41,7 +41,73 @@ const viewAllPostsHandler = async (req, res) => {
   }
 };
 
+const likeAndDislikePostHandler = async (req, res) => {
+  const { id } = req.body;
+  const postId = req.params.id;
+  console.log(id);
+  try {
+    //find post to be liked
+    const post = await Post.findById(postId);
+    //check if the post has been liked already
+    const postAlreadyLiked = post.numberOfLikes.includes(id);
+    //if user already liked the post, unlike it
+    if (postAlreadyLiked) {
+      post.numberOfLikes = post.numberOfLikes.filter((like) => like != id);
+      await post.save();
+
+      res.json({
+        status: "success",
+        message: "post disliked successfully",
+        post,
+      });
+    } else {
+      //if the user has not liked the post, then like it
+      post.numberOfLikes.push(id);
+      await post.save();
+    }
+
+    res.json({
+      status: "success",
+      message: "post liked successfully",
+      post,
+    });
+  } catch (err) {
+    log.error(err.message);
+  }
+};
+
+//number of view counts
+const postViewCountHandler = async (req, res, next) => {
+  const { userId } = req.body;
+  const postId = req.params.id;
+  try {
+    //find post to be liked
+    const post = await Post.findById(postId);
+    //number of views
+    //check if user has viewed post
+    const isViewed = post.numberOfViews.includes();
+    if (isViewed) {
+      res.json({
+        status: "success",
+        post,
+      });
+    } else {
+      res.json({
+        status: "success",
+        post,
+      });
+      //push the user id into the number of view arrays
+      post.numberOfViews.push(userId);
+      await post.save();
+    }
+  } catch (err) {
+    log.error(err.message);
+  }
+};
+
 module.exports = {
   createPostHandler,
   viewAllPostsHandler,
+  likeAndDislikePostHandler,
+  postViewCountHandler,
 };
