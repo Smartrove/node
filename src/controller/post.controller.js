@@ -105,9 +105,42 @@ const postViewCountHandler = async (req, res, next) => {
   }
 };
 
+const updatePostHandler = async (req, res) => {
+  const { title, description, category, userId } = req.body;
+
+  try {
+    //find post to be liked
+    const post = await Post.findById(req.params.id);
+    //check if post belongs to the current user
+    if (post.user.toString() !== userId) {
+      return res.json({
+        status: 404,
+        message: "You do not have permission to update this post",
+      });
+    }
+    const newPost = await Post.findByIdAndUpdate(
+      req.params.id,
+      {
+        title,
+        description,
+        photo: req?.file?.path,
+      },
+      { new: true }
+    );
+    res.json({
+      status: "success",
+      message: "Post updated successfully",
+      newPost,
+    });
+  } catch (err) {
+    log.error(err.message);
+  }
+};
+
 module.exports = {
   createPostHandler,
   viewAllPostsHandler,
   likeAndDislikePostHandler,
   postViewCountHandler,
+  updatePostHandler,
 };
