@@ -17,4 +17,3 @@ PostRouter.post("/likeAndDislike/:id", likeAndDislikePostHandler);
 PostRouter.post("/viewcount/:id", postViewCountHandler);
 PostRouter.put("/update/:id", updatePostHandler);
 module.exports = PostRouter;
-``;
