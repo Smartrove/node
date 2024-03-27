@@ -11,7 +11,7 @@ const Routes = require("./src/routes/routes");
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://node-j7z3.onrender.com",
+  "https://waiting-list-liart.vercel.app",
 ];
 
 var corsOptions = {
