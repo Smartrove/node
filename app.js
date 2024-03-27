@@ -10,7 +10,7 @@ const morgan = require("morgan");
 const Routes = require("./src/routes/routes");
 
 const allowedOrigins = [
-  "http://localhost:4000",
+  "http://localhost:5173",
   "https://node-j7z3.onrender.com",
 ];
 
