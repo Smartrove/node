@@ -8,7 +8,6 @@ function connect() {
       ? process.env.DATABASE
       : process.env.DATABASE;
 
-      console.log("db uri",dbUri)
   return mongoose
     .connect(dbUri, {
       useNewUrlParser: true,

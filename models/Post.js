@@ -2,46 +2,14 @@ const mongoose = require("mongoose");
 
 const postSchema = new mongoose.Schema(
   {
-    title: {
+    Email: {
       type: String,
-      required: [true, "title field is required"],
+      required: [true, "Email field is required"],
       trim: true,
     },
-    description: {
+    FullName: {
       type: String,
-      required: [true, "description field is required"],
-    },
-    category: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
-      required: [false],
-    },
-    numberOfViews: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
-    numberOfLikes: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
-    numberOfDisLikes: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: [true, "user is required"],
-    },
-    photo: {
-      type: String,
-      required: [false],
+      required: [true, "FullName field is required"],
     },
   },
   { timestamps: true }
