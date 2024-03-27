@@ -2,12 +2,12 @@ const mongoose = require("mongoose");
 
 const postSchema = new mongoose.Schema(
   {
-    Email: {
+    email: {
       type: String,
       required: [true, "Email field is required"],
       trim: true,
     },
-    FullName: {
+    fullName: {
       type: String,
       required: [true, "FullName field is required"],
     },
